@@ -1,0 +1,131 @@
+{
+  "hosts": {
+    "172.17.0.2": {
+      "_ansible_no_log": false,
+      "action": "ansible.builtin.user",
+      "append": false,
+      "changed": false,
+      "comment": "",
+      "group": 1000,
+      "groups": "",
+      "home": "/home/aymane",
+      "invocation": {
+        "module_args": {
+          "append": false,
+          "authorization": null,
+          "comment": null,
+          "create_home": true,
+          "expires": null,
+          "force": false,
+          "generate_ssh_key": null,
+          "group": null,
+          "groups": [
+            ""
+          ],
+          "hidden": null,
+          "home": null,
+          "local": null,
+          "login_class": null,
+          "move_home": false,
+          "name": "aymane",
+          "non_unique": false,
+          "password": null,
+          "password_expire_max": null,
+          "password_expire_min": null,
+          "password_expire_warn": null,
+          "password_lock": null,
+          "profile": null,
+          "remove": false,
+          "role": null,
+          "seuser": null,
+          "shell": null,
+          "skeleton": null,
+          "ssh_key_bits": 0,
+          "ssh_key_comment": "ansible-generated on 2bd66e023b6f",
+          "ssh_key_file": null,
+          "ssh_key_passphrase": null,
+          "ssh_key_type": "rsa",
+          "state": "present",
+          "system": false,
+          "uid": null,
+          "umask": null,
+          "update_password": "always",
+          "user": "aymane"
+        }
+      },
+      "move_home": false,
+      "name": "aymane",
+      "shell": "/bin/bash",
+      "state": "present",
+      "uid": 2003
+    },
+    "172.17.0.3": {
+      "_ansible_no_log": false,
+      "action": "ansible.builtin.user",
+      "append": false,
+      "changed": false,
+      "comment": "",
+      "group": 995,
+      "groups": "",
+      "home": "/home/aymane",
+      "invocation": {
+        "module_args": {
+          "append": false,
+          "authorization": null,
+          "comment": null,
+          "create_home": true,
+          "expires": null,
+          "force": false,
+          "generate_ssh_key": null,
+          "group": null,
+          "groups": [
+            ""
+          ],
+          "hidden": null,
+          "home": null,
+          "local": null,
+          "login_class": null,
+          "move_home": false,
+          "name": "aymane",
+          "non_unique": false,
+          "password": null,
+          "password_expire_max": null,
+          "password_expire_min": null,
+          "password_expire_warn": null,
+          "password_lock": null,
+          "profile": null,
+          "remove": false,
+          "role": null,
+          "seuser": null,
+          "shell": null,
+          "skeleton": null,
+          "ssh_key_bits": 0,
+          "ssh_key_comment": "ansible-generated on e52f74e8e0ad",
+          "ssh_key_file": null,
+          "ssh_key_passphrase": null,
+          "ssh_key_type": "rsa",
+          "state": "present",
+          "system": false,
+          "uid": null,
+          "umask": null,
+          "update_password": "always",
+          "user": "aymane"
+        }
+      },
+      "move_home": false,
+      "name": "aymane",
+      "shell": "/bin/sh",
+      "state": "present",
+      "uid": 996
+    }
+  },
+  "task": {
+    "duration": {
+      "end": "2024-05-16T08:44:16.285739Z",
+      "start": "2024-05-16T08:44:15.648263Z"
+    },
+    "id": "5cc5d44d-72bd-5eaf-0471-000000000005",
+    "name": "user",
+    "path": "/home/feartune/ansible/user.yaml:5"
+  }
+}
