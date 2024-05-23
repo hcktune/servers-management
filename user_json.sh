@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-jq '.plays[].tasks.[1].hosts |  to_entries[] | {ip: .key, password: select(.key).value.invocation.module_args.password user: select(.key).value.name,  changed: select(.key).value.changed, state: select(.key).value.state, uid: select(.key).value.uid,  gid: select(.key).value.group, groups: select(.key).value.groups, sysUser: select(.key).value.invocation.module_args.system, msg: select(.key).value.msg}'
+jq '.plays[].tasks.[1].hosts |  to_entries[] | {ip: .key, password: select(.key).value.invocation.module_args.password, user: select(.key).value.name,  changed: select(.key).value.changed, state: select(.key).value.state, uid: select(.key).value.uid,  gid: select(.key).value.group, groups: select(.key).value.groups, sysUser: select(.key).value.invocation.module_args.system, msg: select(.key).value.msg}'

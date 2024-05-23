@@ -1,19 +1,19 @@
-- name: user 
+- name: manager user accounts on nginx servers 
   hosts: containers
-  become: true
   tasks:
-    - name: user 
+    - name: configure user account  
       ansible.builtin.user:
         append: "{{ append | default(false) }}"
         name: "{{ user }}"
         uid: "{{ uid | default(omit) }}"
-        group: "{{ primary_grp | default(omit)}}"
-        groups: "{{ multiple_grp | default('') }}"
+        group: "{{ primary_group | default(omit)}}"
+        groups: "{{ multiple_group | default('') }}"
         state: "{{ state | default('present') }}"
         force: "{{ force | default(false) }}"
         remove: "{{ remove | default(false) }}"
         system: "{{ root | default(false) }}"
-        password: "{{ password | password_hash('sha512') |default(omit)}}"
+        password: "{{ password  | password_hash('sha512', password) }}"
+        
 
 
 
