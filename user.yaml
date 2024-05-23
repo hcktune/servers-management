@@ -5,7 +5,7 @@
     - name: configure user account  
       ansible.builtin.user:
         append: "{{ append | default(false) }}"
-        name: "{{ user }}"
+        user: "{{ user }}"
         uid: "{{ uid | default(omit) }}"
         group: "{{ primary_group | default(omit)}}"
         groups: "{{ multiple_group | default('') }}"
