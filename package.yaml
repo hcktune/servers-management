@@ -1,5 +1,5 @@
 - name: manage apt packages
-  hosts: containers
+  hosts: "{{ hosts }}"
   become: true
   tasks: 
     - name: apt management
