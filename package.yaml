@@ -1,17 +1,16 @@
 - name: manage apt packages
-  hosts: "{{ hosts }}"
+  hosts: all
   become: true
   tasks: 
     - name: apt management
       ansible.builtin.apt:
+        pkg: "{{ pkg | default(omit) }}"
         autoremove: "{{ autoremove | default(false) }}"
         autoclean: "{{ autoclean | default(false) }}"
         update_cache: "{{ update | default(false) }}"
-        pkg: "{{ pkg | default(omit) }}"
         state: "{{ state | default('present') }}"
         #upgrade: "{{ upgrade | default('no') }}"
         deb: "{{ deb | default(omit)}}"
-        force_apt_get: true
 
         
 
