@@ -1,5 +1,5 @@
 - name: manager user accounts on nginx servers 
-  hosts: "{{ hosts }}"
+  hosts: all
   tasks:
     - name: configure user account  
       ansible.builtin.user:
