@@ -1,19 +1,18 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-# Process the hosts section
 jq '
   .plays[].tasks[1].hosts 
   | to_entries[] 
   | {
       ip: .key, 
+      password: .value.invocation.module_args.password, 
+      user: .value.name, 
       changed: .value.changed, 
-      update: .value.update, 
       state: .value.state, 
-      file_to_deb: .value.deb, 
-      upgrade: .value.upgrade, 
-      autoclean: .value.autoclean, 
-      autoremove: .value.autoremove, 
-      purge: .value.purge, 
+      uid: .value.uid, 
+      gid: .value.group, 
+      groups: .value.groups, 
+      sysUser: .value.invocation.module_args.system, 
       msg: .value.msg
     }
-' 
+'
