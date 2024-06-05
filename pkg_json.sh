@@ -5,7 +5,7 @@ jq '
   | to_entries[] 
   | {
       ip: .key, 
-      changed: .value.invocation.module_args.changed, 
+      changed: .value.changed, 
       update: .value.invocation.module_args.update,
       state: .value.invocation.module_args.state, 
       file_to_deb: .value.invocation.module_args.deb, 
