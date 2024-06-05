@@ -5,14 +5,11 @@ jq '
   | to_entries[] 
   | {
       ip: .key, 
-      changed: .value.changed, 
-      update: .value.update,
-      state: .value.state, 
-      file_to_deb: .value.deb, 
-      upgrade: .value.upgrade, 
-      autoclean: .value.autoclean, 
-      autoremove: .value.autoremove, 
-      purge: .value.purge, 
+      changed: .value.invocation.module_args.changed, 
+      update: .value.invocation.module_args.update,
+      state: .value.invocation.module_args.state, 
+      file_to_deb: .value.invocation.module_args.deb, 
+      upgrade: .value.invocation.module_args.upgrade, 
       stderr: .value.stderr,
       stdout_lines: .value.stdout_lines,
       msg: .value.msg
