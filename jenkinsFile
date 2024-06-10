@@ -1,0 +1,235 @@
+pipeline {
+    agent any
+    
+    parameters {
+        choice(
+            choices: ['user', 'package'],
+            description: 'Select playbook to run',
+            name: 'playbook'
+        )
+        string(
+            defaultValue: 'containers',   
+            description: 'Enter the server ip or group name*',
+            name: 'hosts'
+        )
+        string(
+            description: 'Enter the user name*',
+            name: 'user'
+        )
+        choice(
+            choices: ['present', 'absent'],
+            description: 'When creating an account state=present, setting this to true makes the user exist otherwise, remove it.',
+            name: 'user_state'
+        )
+        choice(
+            choices: ['false', 'true'],
+            description: 'This only affects state=absent, it forces removal of the user and associated directories on supported platforms.',
+            name: 'force'
+        )
+        string(
+            description: 'Change/Enter password of the user*',
+            name: 'password'
+        )
+        string(
+            description: 'Enter the UID',
+            name: 'uid'
+        )
+        string(
+            description: 'Enter the primary group for the user',
+            name: 'group'
+        )
+        string(
+            description: 'Enter multiple groups for the user seperated by comma',
+            name: 'groups'
+        )
+        choice(
+            choices: ['false', 'true'],
+            description: 'This only affects state=absent, it attempts to remove directories associated with the user.',
+            name: 'remove'
+        )
+        choice(
+            choices: ['false', 'true'],
+            description: 'When creating an account state=present, setting this to true makes the user a system account. This setting cannot be changed on existing users.',
+            name: 'root'
+        )
+       
+        
+        /* package management */
+        choice(
+            choices: ['false', 'true'],
+            description: 'Simply run apt update',
+            name: 'update'
+        )
+        string(
+            description: 'Enter the package name*',
+            name: 'pkg'
+        )
+        choice(
+            choices: ['present', 'absent'],
+            description: 'Whether to install (present), or remove (absent) a package.',
+            name: 'pkg_state'
+        )
+       
+        
+        
+       
+        
+    }
+    
+    environment {
+        REPO_URL = 'https://github.com/hcktune/servers-management.git'
+        BRANCH = 'main'
+        INVENTORY_FILE = 'inventory.yaml'
+        USER_JSON = 'user_json.sh'
+        PACKAGE_JSON = 'pkg_json.sh'
+        ANSIBLE_CONF = 'ansible.cfg'
+    }
+    
+    stages {
+        stage('checkout') {
+            steps {
+                git url: "${env.REPO_URL}", branch: "${env.BRANCH}"
+            }
+        }
+        
+        stage('Install Ansible') {
+            steps {
+                sh '''
+                if ! ansible --version; then
+                    sudo apt-get update
+                    sudo apt-get install -y ansible
+                fi
+                '''
+            }
+        }
+        
+        stage('Run Ansible Playbook') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ANSIBLE', keyFileVariable: 'SSH_KEY')]) {
+                    script {
+                    
+                    def extraVars = " "
+                    def process_to_json = ''
+                    if (params.playbook == 'user') {
+                        process_to_json = "${env.USER_JSON}"
+                        if (params.user) {
+                            extraVars += " user=${params.user}"
+                        }
+                        if (params.uid) {
+                            extraVars += " uid=${params.uid}"
+                        }
+                        if (params.password) {
+                            extraVars += " password=$params.password"
+                        }
+                        if (params.user_state) {
+                            extraVars += " state=${params.user_state}"
+                        }
+                        if (params.group) {
+                            extraVars += " primary_group=$params.group"
+                        }
+                        if (params.groups) {
+                            extraVars += " multiple_group=$params.groups"
+                        }
+                        if (params.remove) {
+                            extraVars += " remove=$params.remove"
+                        }
+                         if (params.root) {
+                            extraVars += " root=$params.root"
+                        }
+                         if (params.force) {
+                            extraVars += " force=$params.force"
+                        }
+                    }
+                    else if (params.playbook == 'package') {
+                        process_to_json = "${env.PACKAGE_JSON}"
+                        if (params.update) {
+                            extraVars += " update=${params.update}"
+                        }
+                        if (params.pkg) {
+                            extraVars += " pkg=${params.pkg}"
+                        }
+                        if (params.pkg_state) {
+                            extraVars += " state=${params.pkg_state}"
+                        }
+                        
+                    }
+                    
+                    sh """
+                     ansible-playbook \
+                     -i '${env.INVENTORY_FILE}' \
+                     -e   "${extraVars}"  \
+                     --private-key=$SSH_KEY \
+                     -l '${params.hosts}' \
+                     ${params.playbook}.yaml | ./${process_to_json}
+                     """
+                    
+                    }
+                }
+            }
+            post {
+                failure {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ANSIBLE', keyFileVariable: 'SSH_KEY')]) {
+                        script {
+
+                        def extraVars = " "
+                        def process_to_json = ''
+                        if (params.playbook == 'user') {
+                            process_to_json = "${env.USER_JSON}"
+                            if (params.user) {
+                                extraVars += " user=${params.user}"
+                            }
+                            if (params.uid) {
+                                extraVars += " uid=${params.uid}"
+                            }
+                            if (params.password) {
+                                extraVars += " password=$params.password"
+                            }
+                            if (params.user_state) {
+                                extraVars += " state=${params.user_state}"
+                            }
+                            if (params.group) {
+                                extraVars += " primary_group=$params.group"
+                            }
+                            if (params.groups) {
+                                extraVars += " multiple_group=$params.groups"
+                            }
+                            if (params.remove) {
+                                extraVars += " remove=$params.remove"
+                            }
+                             if (params.root) {
+                                extraVars += " root=$params.root"
+                            }
+                             if (params.force) {
+                                extraVars += " force=$params.force"
+                            }
+                        }
+                        else if (params.playbook == 'package') {
+                            process_to_json = "${env.PACKAGE_JSON}"
+                            if (params.update) {
+                                extraVars += " update=${params.update}"
+                            }
+                            if (params.pkg) {
+                                extraVars += " pkg=${params.pkg}"
+                            }
+                            if (params.pkg_state) {
+                                extraVars += " state=${params.pkg_state}"
+                            }
+                            
+                        }
+                                    
+                            sh """
+                             ansible-playbook \
+                             -i '${env.INVENTORY_FILE}' \
+                             -e   '${extraVars}'  \
+                             --private-key=$SSH_KEY \
+                             -l '${params.hosts}' \
+                             ${params.playbook}.yaml | ./error.sh
+                             """
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+}
